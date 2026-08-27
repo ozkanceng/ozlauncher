@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,7 +13,6 @@ import io.github.ozkanceng.ozlauncher.icons.IconRepository;
 import io.github.ozkanceng.ozlauncher.model.LaunchItem;
 
 public final class AppTileView extends LinearLayout {
-    private final FrameLayout iconStage;
     private final ImageView icon;
     private final TextView label;
     private LaunchItem item;
@@ -29,20 +27,13 @@ public final class AppTileView extends LinearLayout {
         setFocusable(true);
         setClickable(true);
         setLongClickable(true);
-        int pad = Ui.dp(context, 7);
+        int pad = Ui.dp(context, 6);
         setPadding(pad, pad, pad, Ui.dp(context, 8));
-
-        iconStage = new FrameLayout(context);
-        iconStage.setForegroundGravity(Gravity.CENTER);
-        iconStage.setClipToOutline(true);
-        addView(iconStage, new LayoutParams(Ui.dp(context, 92), Ui.dp(context, 92)));
 
         icon = new ImageView(context);
         icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
         icon.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
-        int iconSize = Ui.dp(context, 66);
-        FrameLayout.LayoutParams iconLp = new FrameLayout.LayoutParams(iconSize, iconSize, Gravity.CENTER);
-        iconStage.addView(icon, iconLp);
+        addView(icon, new LayoutParams(Ui.dp(context, 88), Ui.dp(context, 88)));
 
         label = new TextView(context);
         label.setGravity(Gravity.CENTER);
@@ -52,7 +43,7 @@ public final class AppTileView extends LinearLayout {
         label.setSingleLine(true);
         label.setEllipsize(android.text.TextUtils.TruncateAt.END);
         LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        lp.topMargin = Ui.dp(context, 8);
+        lp.topMargin = Ui.dp(context, 7);
         addView(label, lp);
 
         setOnFocusChangeListener((view, focused) -> updateFocus(focused));
@@ -88,17 +79,11 @@ public final class AppTileView extends LinearLayout {
     private void updateFocus(boolean focused) {
         if (palette == null) return;
         setBackground(Ui.tileBackground(getContext(), palette, radiusDp, focused));
-        iconStage.setBackground(Ui.iconStage(getContext(), palette, focused));
         label.setTextColor(palette.text);
         label.setAlpha(focused ? 1f : 0.86f);
-        float scale = focused && !reducedMotion ? 1.045f : 1f;
-        float iconScale = focused && !reducedMotion ? 1.06f : 1f;
+        float scale = focused && !reducedMotion ? 1.04f : 1f;
         if (reducedMotion) { setScaleX(scale); setScaleY(scale); }
-        else {
-            animate().scaleX(scale).scaleY(scale).setDuration(120).start();
-            iconStage.animate().scaleX(iconScale).scaleY(iconScale).setDuration(120).start();
-        }
-        if (reducedMotion) { iconStage.setScaleX(iconScale); iconStage.setScaleY(iconScale); }
-        setElevation(focused ? Ui.dp(getContext(), 10) : 0);
+        else animate().scaleX(scale).scaleY(scale).setDuration(100).start();
+        setElevation(focused ? Ui.dp(getContext(), 6) : 0);
     }
 }
