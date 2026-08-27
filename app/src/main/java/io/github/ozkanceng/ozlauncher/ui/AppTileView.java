@@ -3,8 +3,13 @@ package io.github.ozkanceng.ozlauncher.ui;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Outline;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
+import android.view.View;
+import android.view.ViewOutlineProvider;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,6 +18,7 @@ import io.github.ozkanceng.ozlauncher.icons.IconRepository;
 import io.github.ozkanceng.ozlauncher.model.LaunchItem;
 
 public final class AppTileView extends LinearLayout {
+    private final FrameLayout iconPlate;
     private final ImageView icon;
     private final TextView label;
     private LaunchItem item;
@@ -27,22 +33,36 @@ public final class AppTileView extends LinearLayout {
         setFocusable(true);
         setClickable(true);
         setLongClickable(true);
-        int pad = Ui.dp(context, 10);
-        setPadding(pad, pad, pad, Ui.dp(context, 7));
+        int pad = Ui.dp(context, 4);
+        setPadding(pad, pad, pad, Ui.dp(context, 6));
+
+        iconPlate = new FrameLayout(context);
+        final int plateRadius = Ui.dp(context, 18);
+        iconPlate.setOutlineProvider(new ViewOutlineProvider() {
+            @Override public void getOutline(View view, Outline outline) {
+                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), plateRadius);
+            }
+        });
+        iconPlate.setClipToOutline(true);
+        addView(iconPlate, new LayoutParams(Ui.dp(context, 142), Ui.dp(context, 86)));
 
         icon = new ImageView(context);
-        icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        icon.setScaleType(ImageView.ScaleType.CENTER_CROP);
         icon.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
-        addView(icon, new LayoutParams(Ui.dp(context, 74), Ui.dp(context, 74)));
+        FrameLayout.LayoutParams iconLp = new FrameLayout.LayoutParams(
+                LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, Gravity.CENTER);
+        iconPlate.addView(icon, iconLp);
 
         label = new TextView(context);
         label.setGravity(Gravity.CENTER);
         label.setTextColor(Color.WHITE);
-        label.setTextSize(14);
+        label.setTextSize(15);
+        label.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
+        label.setLetterSpacing(0.005f);
         label.setSingleLine(true);
         label.setEllipsize(android.text.TextUtils.TruncateAt.END);
         LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        lp.topMargin = Ui.dp(context, 5);
+        lp.topMargin = Ui.dp(context, 9);
         addView(label, lp);
 
         setOnFocusChangeListener((view, focused) -> updateFocus(focused));
@@ -78,10 +98,23 @@ public final class AppTileView extends LinearLayout {
     private void updateFocus(boolean focused) {
         if (palette == null) return;
         setBackground(Ui.tileBackground(getContext(), palette, radiusDp, focused));
-        label.setTextColor(focused && palette.accent == Color.WHITE ? Color.BLACK : palette.text);
-        float scale = focused && !reducedMotion ? 1.055f : 1f;
-        if (reducedMotion) { setScaleX(scale); setScaleY(scale); }
-        else animate().scaleX(scale).scaleY(scale).setDuration(100).start();
-        setElevation(focused ? Ui.dp(getContext(), 8) : 0);
+        iconPlate.setBackground(Ui.tvIconPlate(getContext(), palette, focused));
+        label.setTextColor(palette.text);
+        label.setAlpha(focused ? 1f : 0.78f);
+        label.setTypeface(Typeface.create("sans-serif-medium",
+                focused ? Typeface.NORMAL : Typeface.NORMAL));
+        float plateScale = focused && !reducedMotion ? 1.09f : 1f;
+        float tileScale = focused && !reducedMotion ? 1.025f : 1f;
+        if (reducedMotion) {
+            setScaleX(tileScale);
+            setScaleY(tileScale);
+            iconPlate.setScaleX(plateScale);
+            iconPlate.setScaleY(plateScale);
+        } else {
+            animate().scaleX(tileScale).scaleY(tileScale).setDuration(150).start();
+            iconPlate.animate().scaleX(plateScale).scaleY(plateScale).setDuration(150).start();
+        }
+        iconPlate.setElevation(focused ? Ui.dp(getContext(), 18) : Ui.dp(getContext(), 2));
+        setElevation(focused ? Ui.dp(getContext(), 12) : 0);
     }
 }

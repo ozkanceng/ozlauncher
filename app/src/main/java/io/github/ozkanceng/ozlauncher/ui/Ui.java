@@ -2,7 +2,9 @@ package io.github.ozkanceng.ozlauncher.ui;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.view.View;
 
 public final class Ui {
@@ -21,11 +23,40 @@ public final class Ui {
 
     public static GradientDrawable tileBackground(Context context, ThemePalette palette,
                                                    int radiusDp, boolean focused) {
-        GradientDrawable drawable = rounded(focused ? palette.accent : palette.surface, radiusDp, context);
-        int stroke = focused ? dp(context, 3) : dp(context, 1);
-        int strokeColor = focused ? Color.WHITE : 0x44FFFFFF;
-        drawable.setStroke(stroke, strokeColor);
+        GradientDrawable drawable = rounded(Color.TRANSPARENT, radiusDp, context);
+        drawable.setStroke(0, Color.TRANSPARENT);
         return drawable;
+    }
+
+    /**
+     * A lightweight tvOS-inspired landscape plate. It creates depth with two gradients and
+     * a soft edge, without bitmap assets, blur passes or additional runtime dependencies.
+     */
+    public static Drawable tvIconPlate(Context context, ThemePalette palette, boolean focused) {
+        int top = focused ? blend(palette.surface, Color.WHITE, 0.15f)
+                : blend(palette.surface, Color.WHITE, 0.06f);
+        int bottom = focused ? blend(palette.surface, palette.background, 0.20f)
+                : blend(palette.surface, palette.background, 0.34f);
+        GradientDrawable base = new GradientDrawable(
+                GradientDrawable.Orientation.TOP_BOTTOM, new int[] { top, bottom });
+        base.setCornerRadius(dp(context, 18));
+        base.setStroke(dp(context, focused ? 2 : 1), focused ? 0xE6FFFFFF : 0x28FFFFFF);
+
+        GradientDrawable light = new GradientDrawable(
+                GradientDrawable.Orientation.TOP_BOTTOM,
+                new int[] { focused ? 0x26FFFFFF : 0x12FFFFFF, 0x00FFFFFF });
+        light.setCornerRadius(dp(context, 18));
+        LayerDrawable layers = new LayerDrawable(new Drawable[] { base, light });
+        layers.setLayerInset(1, dp(context, 2), dp(context, 2), dp(context, 2), dp(context, 26));
+        return layers;
+    }
+
+    private static int blend(int from, int to, float amount) {
+        float inverse = 1f - amount;
+        return Color.argb(Math.round(Color.alpha(from) * inverse + Color.alpha(to) * amount),
+                Math.round(Color.red(from) * inverse + Color.red(to) * amount),
+                Math.round(Color.green(from) * inverse + Color.green(to) * amount),
+                Math.round(Color.blue(from) * inverse + Color.blue(to) * amount));
     }
 
     public static void hideSystemUi(View decor) {

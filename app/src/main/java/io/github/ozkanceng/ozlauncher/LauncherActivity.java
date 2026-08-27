@@ -205,7 +205,9 @@ public final class LauncherActivity extends Activity {
 
         clockView = new TextView(this);
         clockView.setTextColor(palette.text);
-        clockView.setTextSize(24);
+        clockView.setTextSize(25);
+        clockView.setTypeface(android.graphics.Typeface.create("sans-serif-light",
+                android.graphics.Typeface.NORMAL));
         clockView.setGravity(Gravity.CENTER_VERTICAL);
         clockView.setContentDescription(getString(R.string.cd_clock));
         top.addView(clockView, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1));
@@ -225,8 +227,9 @@ public final class LauncherActivity extends Activity {
         favoriteTitle = new TextView(this);
         favoriteTitle.setText(R.string.home_favorites);
         favoriteTitle.setTextColor(palette.text);
-        favoriteTitle.setTextSize(19);
-        favoriteTitle.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+        favoriteTitle.setTextSize(20);
+        favoriteTitle.setTypeface(android.graphics.Typeface.create("sans-serif-medium",
+                android.graphics.Typeface.NORMAL));
         FrameLayout.LayoutParams titleLp = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM | Gravity.START);
         titleLp.setMargins(Ui.dp(this, 54), 0, 0, Ui.dp(this, 228));

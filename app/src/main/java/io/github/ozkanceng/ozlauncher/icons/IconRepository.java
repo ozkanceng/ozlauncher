@@ -197,12 +197,30 @@ public final class IconRepository {
 
     private Bitmap loadApplication(LaunchItem item, int sizePx) {
         try {
-            Drawable drawable = item.resolveInfo == null ? null : item.resolveInfo.loadIcon(context.getPackageManager());
+            Drawable drawable = null;
+            boolean isBanner = false;
+            if (item.resolveInfo != null && item.resolveInfo.activityInfo != null) {
+                drawable = item.resolveInfo.activityInfo.loadBanner(context.getPackageManager());
+                if (drawable == null && item.resolveInfo.activityInfo.applicationInfo != null) {
+                    drawable = item.resolveInfo.activityInfo.applicationInfo.loadBanner(context.getPackageManager());
+                }
+                isBanner = drawable != null;
+            }
+            if (drawable == null && item.resolveInfo != null) {
+                drawable = item.resolveInfo.loadIcon(context.getPackageManager());
+            }
             if (drawable == null) return null;
-            Bitmap out = Bitmap.createBitmap(sizePx, sizePx, Bitmap.Config.ARGB_8888);
+            int heightPx = Math.max(1, Math.round(sizePx * 0.6f));
+            Bitmap out = Bitmap.createBitmap(sizePx, heightPx, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(out);
-            int inset = Math.max(1, sizePx / 14);
-            drawable.setBounds(inset, inset, sizePx - inset, sizePx - inset);
+            if (isBanner) {
+                drawable.setBounds(0, 0, sizePx, heightPx);
+            } else {
+                int iconSize = Math.round(heightPx * 0.88f);
+                int left = (sizePx - iconSize) / 2;
+                int top = (heightPx - iconSize) / 2;
+                drawable.setBounds(left, top, left + iconSize, top + iconSize);
+            }
             drawable.draw(canvas);
             return out;
         } catch (RuntimeException | OutOfMemoryError ignored) {
