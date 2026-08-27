@@ -2,6 +2,14 @@
 
 All notable changes follow Keep a Changelog and Semantic Versioning.
 
+## [1.0.1] — 2026-08-27
+
+### Changed
+
+- Prefer native Android TV landscape banners, with uncropped app-icon fallback.
+- Add tvOS-inspired focus depth, restrained typography and 18 dp rounded artwork.
+- Keep the launcher lightweight with programmatic, dependency-free visuals.
+
 ## [1.0.0] — 2026-08-27
 
 ### Added
