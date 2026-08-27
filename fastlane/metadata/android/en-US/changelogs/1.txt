@@ -1,0 +1,1 @@
+Initial release with favorites, virtualized app drawer, local search, custom icons, TV inputs, themes, remote shortcuts, static wallpaper, backup/restore and ten languages.

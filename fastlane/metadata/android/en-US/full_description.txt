@@ -1,0 +1,1 @@
+OZLauncher is a tiny independent home screen for Android TV and Google TV. Browse local apps and supported HDMI/AV inputs without ads, recommendations, tracking, accounts or network access. Customize favorites, grid density, colors, corners, wallpapers, icons and remote shortcuts. Back up your setup to a local file whenever you choose.

@@ -1,0 +1,30 @@
+Categories:
+  - Theming
+License: Apache-2.0
+AuthorName: ozkanceng
+SourceCode: https://github.com/ozkanceng/ozlauncher
+IssueTracker: https://github.com/ozkanceng/ozlauncher/issues
+Changelog: https://github.com/ozkanceng/ozlauncher/blob/main/CHANGELOG.md
+
+AutoName: OZLauncher
+Summary: Fast, private and ad-free launcher for Android TV
+Description: |-
+  OZLauncher is a tiny, independent HOME launcher for Android TV and Google TV.
+  It displays local apps and compatible TV inputs without advertisements,
+  recommendations, accounts, analytics or network access.
+
+RepoType: git
+Repo: https://github.com/ozkanceng/ozlauncher.git
+
+Builds:
+  - versionName: 1.0.0
+    versionCode: 1
+    commit: v1.0.0
+    subdir: app
+    gradle:
+      - yes
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: 1.0.0
+CurrentVersionCode: 1
