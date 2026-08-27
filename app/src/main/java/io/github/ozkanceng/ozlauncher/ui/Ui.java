@@ -39,32 +39,16 @@ public final class Ui {
                 : blend(palette.surface, palette.background, 0.34f);
         GradientDrawable base = new GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM, new int[] { top, bottom });
-        base.setCornerRadius(dp(context, 24));
+        base.setCornerRadius(dp(context, 18));
         base.setStroke(dp(context, focused ? 2 : 1), focused ? 0xE6FFFFFF : 0x28FFFFFF);
 
         GradientDrawable light = new GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM,
                 new int[] { focused ? 0x26FFFFFF : 0x12FFFFFF, 0x00FFFFFF });
-        light.setCornerRadius(dp(context, 24));
+        light.setCornerRadius(dp(context, 18));
         LayerDrawable layers = new LayerDrawable(new Drawable[] { base, light });
         layers.setLayerInset(1, dp(context, 2), dp(context, 2), dp(context, 2), dp(context, 26));
         return layers;
-    }
-
-    /** Drawn above app artwork so the rounded edge stays visible on both light and dark art. */
-    public static Drawable tvIconBorder(Context context, boolean focused) {
-        GradientDrawable darkEdge = rounded(Color.TRANSPARENT, 24, context);
-        darkEdge.setStroke(dp(context, focused ? 3 : 2),
-                focused ? 0xB8000000 : 0x66000000);
-
-        GradientDrawable lightEdge = rounded(Color.TRANSPARENT, 23, context);
-        lightEdge.setStroke(dp(context, focused ? 2 : 1),
-                focused ? 0xF2FFFFFF : 0x8AFFFFFF);
-
-        LayerDrawable border = new LayerDrawable(new Drawable[] { darkEdge, lightEdge });
-        int inset = dp(context, 1);
-        border.setLayerInset(1, inset, inset, inset, inset);
-        return border;
     }
 
     private static int blend(int from, int to, float amount) {

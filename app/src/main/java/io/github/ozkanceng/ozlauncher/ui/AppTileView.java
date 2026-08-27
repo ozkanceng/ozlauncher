@@ -37,7 +37,7 @@ public final class AppTileView extends LinearLayout {
         setPadding(pad, pad, pad, Ui.dp(context, 6));
 
         iconPlate = new FrameLayout(context);
-        final int plateRadius = Ui.dp(context, 24);
+        final int plateRadius = Ui.dp(context, 18);
         iconPlate.setOutlineProvider(new ViewOutlineProvider() {
             @Override public void getOutline(View view, Outline outline) {
                 outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), plateRadius);
@@ -99,7 +99,6 @@ public final class AppTileView extends LinearLayout {
         if (palette == null) return;
         setBackground(Ui.tileBackground(getContext(), palette, radiusDp, focused));
         iconPlate.setBackground(Ui.tvIconPlate(getContext(), palette, focused));
-        iconPlate.setForeground(Ui.tvIconBorder(getContext(), focused));
         label.setTextColor(palette.text);
         label.setAlpha(focused ? 1f : 0.78f);
         label.setTypeface(Typeface.create("sans-serif-medium",
