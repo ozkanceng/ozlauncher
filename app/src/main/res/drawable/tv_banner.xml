@@ -1,12 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="VectorRaster"
     android:width="320dp"
     android:height="180dp"
     android:viewportWidth="320"
     android:viewportHeight="180">
-    <path android:fillColor="#0F172A" android:pathData="M0,0h320v180h-320z" />
-    <path android:fillColor="#22D3EE" android:fillType="evenOdd"
-        android:pathData="M89,48a42,42 0,1 0,0 84a42,42 0,1 0,0 -84M89,65a25,25 0,1 1,0 50a25,25 0,1 1,0 -50M147,50h86v17l-55,48h57v17h-91v-17l56,-48h-53z" />
+    <path android:pathData="M0,0h320v180h-320z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="0"
+                android:startY="0"
+                android:endX="320"
+                android:endY="180"
+                android:type="linear">
+                <item android:color="#FF06131F" android:offset="0" />
+                <item android:color="#FF0B3045" android:offset="0.55" />
+                <item android:color="#FF0E7490" android:offset="1" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path android:fillColor="#24000000"
+        android:pathData="M0,135L120,86L206,118L320,55V180H0z" />
+    <path android:fillColor="#4D000000" android:fillType="evenOdd"
+        android:pathData="M92,51a42,42 0,1 0,0 84a42,42 0,1 0,0 -84M92,68a25,25 0,1 1,0 50a25,25 0,1 1,0 -50M150,53h86v17l-55,48h57v17h-91v-17l56,-48h-53z" />
+    <path android:fillType="evenOdd"
+        android:pathData="M89,48a42,42 0,1 0,0 84a42,42 0,1 0,0 -84M89,65a25,25 0,1 1,0 50a25,25 0,1 1,0 -50M147,50h86v17l-55,48h57v17h-91v-17l56,-48h-53z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="72"
+                android:startY="42"
+                android:endX="236"
+                android:endY="136"
+                android:type="linear">
+                <item android:color="#FFECFEFF" android:offset="0" />
+                <item android:color="#FF67E8F9" android:offset="0.48" />
+                <item android:color="#FF22D3EE" android:offset="1" />
+            </gradient>
+        </aapt:attr>
+    </path>
 </vector>

@@ -2,6 +2,16 @@
 
 All notable changes follow Keep a Changelog and Semantic Versioning.
 
+## [1.0.2] — 2026-08-27
+
+### Added
+
+- Distinct generated HDMI 1–3 artwork with port labels for MediaTek/Vestel TV inputs.
+
+### Changed
+
+- Refined the adaptive icon and TV banner with a navy-to-cyan brand gradient and subtle depth.
+
 ## [1.0.1] — 2026-08-27
 
 ### Changed
