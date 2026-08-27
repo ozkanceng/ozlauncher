@@ -3,9 +3,12 @@ package io.github.ozkanceng.ozlauncher.ui;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Outline;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
+import android.view.View;
+import android.view.ViewOutlineProvider;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,6 +37,12 @@ public final class AppTileView extends LinearLayout {
         setPadding(pad, pad, pad, Ui.dp(context, 6));
 
         iconPlate = new FrameLayout(context);
+        final int plateRadius = Ui.dp(context, 18);
+        iconPlate.setOutlineProvider(new ViewOutlineProvider() {
+            @Override public void getOutline(View view, Outline outline) {
+                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), plateRadius);
+            }
+        });
         iconPlate.setClipToOutline(true);
         addView(iconPlate, new LayoutParams(Ui.dp(context, 142), Ui.dp(context, 86)));
 
