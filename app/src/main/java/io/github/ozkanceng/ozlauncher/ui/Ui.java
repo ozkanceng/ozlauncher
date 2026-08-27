@@ -39,13 +39,13 @@ public final class Ui {
                 : blend(palette.surface, palette.background, 0.34f);
         GradientDrawable base = new GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM, new int[] { top, bottom });
-        base.setCornerRadius(dp(context, 18));
+        base.setCornerRadius(dp(context, 24));
         base.setStroke(dp(context, focused ? 2 : 1), focused ? 0xE6FFFFFF : 0x28FFFFFF);
 
         GradientDrawable light = new GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM,
                 new int[] { focused ? 0x26FFFFFF : 0x12FFFFFF, 0x00FFFFFF });
-        light.setCornerRadius(dp(context, 18));
+        light.setCornerRadius(dp(context, 24));
         LayerDrawable layers = new LayerDrawable(new Drawable[] { base, light });
         layers.setLayerInset(1, dp(context, 2), dp(context, 2), dp(context, 2), dp(context, 26));
         return layers;
