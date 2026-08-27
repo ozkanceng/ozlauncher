@@ -60,17 +60,40 @@ public final class CatalogLoader {
         TvInputManager manager = (TvInputManager) context.getSystemService(Context.TV_INPUT_SERVICE);
         if (manager == null) return;
         try {
+            ArrayList<TvInputInfo> passthrough = new ArrayList<>();
+            ArrayList<TvInputInfo> hdmi = new ArrayList<>();
             for (TvInputInfo input : manager.getTvInputList()) {
                 if (!input.isPassthroughInput()) continue;
+                passthrough.add(input);
+                if (input.getType() == TvInputInfo.TYPE_HDMI) hdmi.add(input);
+            }
+            hdmi.sort(Comparator.comparingInt(input -> hardwareOrder(input.getId())));
+            Map<String, Integer> hdmiPort = new LinkedHashMap<>();
+            for (int i = 0; i < hdmi.size(); i++) hdmiPort.put(hdmi.get(i).getId(), i + 1);
+
+            for (TvInputInfo input : passthrough) {
                 CharSequence raw = input.loadCustomLabel(context);
                 if (raw == null || raw.length() == 0) raw = input.loadLabel(context);
                 String label = raw == null || raw.length() == 0
                         ? labelForType(input.getType()) : raw.toString();
+                Integer port = hdmiPort.get(input.getId());
+                if (input.getType() == TvInputInfo.TYPE_HDMI && port != null
+                        && !label.matches(".*\\d.*")) {
+                    label = "HDMI " + port;
+                }
                 target.add(LaunchItem.input(label, input.getId()));
             }
         } catch (RuntimeException ignored) {
             // Several vendor TV-input implementations throw while booting. Apps remain usable.
         }
+    }
+
+    static int hardwareOrder(String id) {
+        if (id == null) return Integer.MAX_VALUE;
+        int marker = id.lastIndexOf("/HW");
+        if (marker < 0) return Integer.MAX_VALUE;
+        try { return Integer.parseInt(id.substring(marker + 3)); }
+        catch (NumberFormatException ignored) { return Integer.MAX_VALUE; }
     }
 
     private String labelForType(int type) {

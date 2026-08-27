@@ -8,8 +8,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.Shader;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
@@ -67,7 +71,7 @@ public final class IconRepository {
         executor.execute(() -> {
             Bitmap bitmap = loadCustom(item.id, sizePx);
             if (bitmap == null) bitmap = item.kind == LaunchItem.Kind.TV_INPUT
-                    ? drawInput(sizePx) : loadApplication(item, sizePx);
+                    ? drawInput(item, sizePx) : loadApplication(item, sizePx);
             if (bitmap != null) memory.put(item.id, bitmap);
             Bitmap delivered = bitmap;
             main.post(() -> callback.onIcon(item.id, delivered));
@@ -228,18 +232,85 @@ public final class IconRepository {
         }
     }
 
-    private static Bitmap drawInput(int size) {
-        Bitmap out = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+    private static Bitmap drawInput(LaunchItem item, int width) {
+        int height = Math.max(1, Math.round(width * 0.6f));
+        Bitmap out = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(out);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+        boolean hdmi = item.inputId != null
+                && item.inputId.toLowerCase(java.util.Locale.US).contains("hdmi");
+        if (!hdmi) return drawGenericInput(out, canvas, paint, width, height);
+
+        paint.setShader(new LinearGradient(0, 0, width, height,
+                new int[] { 0xFF082F49, 0xFF0E7490, 0xFF164E63 },
+                null, Shader.TileMode.CLAMP));
+        canvas.drawRect(0, 0, width, height, paint);
+        paint.setShader(null);
+
+        // HDMI connector silhouette, sized to remain readable across a living room.
+        float left = width * 0.10f;
+        float right = width * 0.45f;
+        float top = height * 0.27f;
+        float bottom = height * 0.72f;
+        float bevel = height * 0.10f;
+        Path connector = new Path();
+        connector.moveTo(left + bevel, top);
+        connector.lineTo(right - bevel, top);
+        connector.lineTo(right, top + bevel);
+        connector.lineTo(right, bottom - bevel);
+        connector.lineTo(right - bevel, bottom);
+        connector.lineTo(left + bevel, bottom);
+        connector.lineTo(left, bottom - bevel);
+        connector.lineTo(left, top + bevel);
+        connector.close();
+        paint.setColor(0xF2FFFFFF);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(Math.max(2f, height * 0.035f));
+        canvas.drawPath(connector, paint);
+        float pinTop = top + height * 0.12f;
+        float pinBottom = bottom - height * 0.12f;
+        for (int i = 1; i <= 5; i++) {
+            float x = left + (right - left) * i / 6f;
+            canvas.drawLine(x, pinTop, x, pinBottom, paint);
+        }
+
+        paint.setStyle(Paint.Style.FILL);
+        paint.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
+        paint.setTextAlign(Paint.Align.LEFT);
+        paint.setColor(Color.WHITE);
+        paint.setTextSize(height * 0.29f);
+        canvas.drawText("HDMI", width * 0.53f, height * 0.48f, paint);
+
+        String port = firstNumber(item.label);
+        if (!port.isEmpty()) {
+            paint.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
+            paint.setColor(0xCCFFFFFF);
+            paint.setTextSize(height * 0.22f);
+            canvas.drawText("PORT " + port, width * 0.53f, height * 0.72f, paint);
+        }
+        return out;
+    }
+
+    private static Bitmap drawGenericInput(Bitmap out, Canvas canvas, Paint paint,
+                                           int width, int height) {
         paint.setColor(0xFF22D3EE);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(Math.max(3, size / 18f));
-        Rect rect = new Rect(size / 8, size / 5, size * 7 / 8, size * 3 / 4);
-        canvas.drawRoundRect(rect.left, rect.top, rect.right, rect.bottom, size / 12f, size / 12f, paint);
-        canvas.drawLine(size / 3f, size * 7 / 8f, size * 2 / 3f, size * 7 / 8f, paint);
-        canvas.drawLine(size / 2f, size * 3 / 4f, size / 2f, size * 7 / 8f, paint);
+        paint.setStrokeWidth(Math.max(2f, height / 18f));
+        Rect rect = new Rect(width / 5, height / 6, width * 4 / 5, height * 3 / 4);
+        canvas.drawRoundRect(rect.left, rect.top, rect.right, rect.bottom,
+                height / 12f, height / 12f, paint);
+        canvas.drawLine(width * 0.38f, height * 0.88f, width * 0.62f, height * 0.88f, paint);
+        canvas.drawLine(width / 2f, height * 0.75f, width / 2f, height * 0.88f, paint);
         return out;
+    }
+
+    private static String firstNumber(String value) {
+        if (value == null) return "";
+        for (int i = 0; i < value.length(); i++) {
+            if (Character.isDigit(value.charAt(i))) return String.valueOf(value.charAt(i));
+        }
+        return "";
     }
 
     private static Bitmap fit(Bitmap source, int target) {
