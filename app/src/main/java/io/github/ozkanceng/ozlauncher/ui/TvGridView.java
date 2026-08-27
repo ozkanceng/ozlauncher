@@ -107,7 +107,9 @@ public final class TvGridView extends ViewGroup {
     private void bindCells() {
         if (icons == null) return;
         int base = topRow * columns;
-        int iconPx = Ui.dp(getContext(), columns >= 8 ? 56 : columns == 7 ? 64 : 74);
+        // Request a landscape bitmap so Android TV banners stay sharp and square fallback
+        // icons can be centered without being stretched or cropped.
+        int iconPx = Ui.dp(getContext(), columns >= 8 ? 112 : columns == 7 ? 128 : 148);
         for (int i = 0; i < cells.size(); i++) {
             int index = base + i;
             cells.get(i).bind(index < items.size() ? items.get(index) : null, icons, iconPx);
