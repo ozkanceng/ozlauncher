@@ -9,3 +9,4 @@ signing.properties
 captures/
 performance-results/
 dist/
+emulator-*.png

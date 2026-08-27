@@ -65,6 +65,15 @@ public final class TvGridView extends ViewGroup {
 
     public List<LaunchItem> items() { return new ArrayList<>(items); }
 
+    /** Frees all off-screen child views when an overlay is closed. */
+    public void releaseCells() {
+        items = Collections.emptyList();
+        cells.clear();
+        removeAllViews();
+        topRow = 0;
+        selectedIndex = 0;
+    }
+
     public void focusSelected() {
         if (items.isEmpty()) return;
         int local = selectedIndex - topRow * columns;

@@ -319,8 +319,10 @@ public final class LauncherActivity extends Activity {
         stylePill(settingsButton);
         favoriteGrid.configure(Math.min(6, preferences.columns()), 1, palette,
                 preferences.radiusDp(), preferences.reducedMotion(), icons, homeListener);
-        drawerGrid.configure(preferences.columns(), 3, palette, preferences.radiusDp(),
-                preferences.reducedMotion(), icons, drawerListener);
+        if (drawer.getVisibility() == View.VISIBLE) {
+            drawerGrid.configure(preferences.columns(), 3, palette, preferences.radiusDp(),
+                    preferences.reducedMotion(), icons, drawerListener);
+        }
     }
 
     private final TvGridView.Listener homeListener = new TvGridView.Listener() {
@@ -362,7 +364,7 @@ public final class LauncherActivity extends Activity {
         favoriteGrid.setItems(favorites);
         favoriteGrid.setVisibility(favorites.isEmpty() ? View.INVISIBLE : View.VISIBLE);
         favoriteEmpty.setVisibility(favorites.isEmpty() ? View.VISIBLE : View.GONE);
-        filterDrawer();
+        if (drawer.getVisibility() == View.VISIBLE) filterDrawer();
         if (drawer.getVisibility() != View.VISIBLE && !favorites.isEmpty()) favoriteGrid.postDelayed(favoriteGrid::focusSelected, 80);
     }
 
@@ -376,6 +378,8 @@ public final class LauncherActivity extends Activity {
 
     private void openDrawer(boolean focusSearch) {
         drawer.setVisibility(View.VISIBLE);
+        drawerGrid.configure(preferences.columns(), 3, palette, preferences.radiusDp(),
+                preferences.reducedMotion(), icons, drawerListener);
         filterDrawer();
         if (focusSearch) {
             search.requestFocus();
@@ -391,6 +395,7 @@ public final class LauncherActivity extends Activity {
         if (manager != null) manager.hideSoftInputFromWindow(search.getWindowToken(), 0);
         search.setText("");
         drawer.setVisibility(View.GONE);
+        drawerGrid.releaseCells();
         favoriteGrid.post(favoriteGrid::focusSelected);
     }
 

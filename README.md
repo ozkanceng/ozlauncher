@@ -27,6 +27,10 @@ OZLauncher is a free, independent and privacy-first home launcher for Android TV
 
 Keep your previous launcher enabled until OZLauncher has survived a reboot and you have tested inputs, streaming apps, sound, keyboard and remote controls.
 
+## Performance
+
+Measured results and the current optimization status are in [docs/PERFORMANCE.md](docs/PERFORMANCE.md).
+
 ## Build
 
 Requirements: JDK 17+ and Android SDK 36.
