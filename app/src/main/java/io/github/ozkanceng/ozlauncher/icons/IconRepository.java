@@ -201,8 +201,7 @@ public final class IconRepository {
             if (drawable == null) return null;
             Bitmap out = Bitmap.createBitmap(sizePx, sizePx, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(out);
-            int inset = Math.max(1, sizePx / 14);
-            drawable.setBounds(inset, inset, sizePx - inset, sizePx - inset);
+            drawable.setBounds(0, 0, sizePx, sizePx);
             drawable.draw(canvas);
             return out;
         } catch (RuntimeException | OutOfMemoryError ignored) {

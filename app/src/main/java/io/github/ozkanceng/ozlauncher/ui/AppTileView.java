@@ -38,10 +38,10 @@ public final class AppTileView extends LinearLayout {
         addView(iconPlate, new LayoutParams(Ui.dp(context, 142), Ui.dp(context, 86)));
 
         icon = new ImageView(context);
-        icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        icon.setScaleType(ImageView.ScaleType.CENTER_CROP);
         icon.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
         FrameLayout.LayoutParams iconLp = new FrameLayout.LayoutParams(
-                Ui.dp(context, 68), Ui.dp(context, 68), Gravity.CENTER);
+                LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, Gravity.CENTER);
         iconPlate.addView(icon, iconLp);
 
         label = new TextView(context);
