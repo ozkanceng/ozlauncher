@@ -99,6 +99,7 @@ public final class AppTileView extends LinearLayout {
         if (palette == null) return;
         setBackground(Ui.tileBackground(getContext(), palette, radiusDp, focused));
         iconPlate.setBackground(Ui.tvIconPlate(getContext(), palette, focused));
+        iconPlate.setForeground(Ui.tvIconBorder(getContext(), focused));
         label.setTextColor(palette.text);
         label.setAlpha(focused ? 1f : 0.78f);
         label.setTypeface(Typeface.create("sans-serif-medium",

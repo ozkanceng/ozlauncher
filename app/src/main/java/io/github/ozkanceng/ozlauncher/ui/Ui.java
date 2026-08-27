@@ -51,6 +51,22 @@ public final class Ui {
         return layers;
     }
 
+    /** Drawn above app artwork so the rounded edge stays visible on both light and dark art. */
+    public static Drawable tvIconBorder(Context context, boolean focused) {
+        GradientDrawable darkEdge = rounded(Color.TRANSPARENT, 24, context);
+        darkEdge.setStroke(dp(context, focused ? 3 : 2),
+                focused ? 0xB8000000 : 0x66000000);
+
+        GradientDrawable lightEdge = rounded(Color.TRANSPARENT, 23, context);
+        lightEdge.setStroke(dp(context, focused ? 2 : 1),
+                focused ? 0xF2FFFFFF : 0x8AFFFFFF);
+
+        LayerDrawable border = new LayerDrawable(new Drawable[] { darkEdge, lightEdge });
+        int inset = dp(context, 1);
+        border.setLayerInset(1, inset, inset, inset, inset);
+        return border;
+    }
+
     private static int blend(int from, int to, float amount) {
         float inverse = 1f - amount;
         return Color.argb(Math.round(Color.alpha(from) * inverse + Color.alpha(to) * amount),
